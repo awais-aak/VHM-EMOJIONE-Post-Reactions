@@ -2,6 +2,8 @@
 
 Wordpress plugin that allows users to react to a post or page with an emoji from EMOJIONE
 
+<img style="width:100%" src="https://github.com/viktormorales/VHM-EMOJIONE-Post-Reactions/blob/master/vhm-emojione-post-reactions/img/VHM-EMOJIONE-Post-Reactions.jpg">
+
 ## Setup
 * Download the Master branch.
 * Extract the files from the ZIP.
