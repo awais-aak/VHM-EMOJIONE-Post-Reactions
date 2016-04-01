@@ -3,7 +3,7 @@
  * Plugin Name: VHM EMOJIONE Post Reactions
  * Plugin URI: http://viktormorales.com
  * Description: Let users REACT to your post or pages with EMOJIS.
- * Version: 1.1
+ * Version: 1.4
  * Author: Viktor H. Morales
  * Author URI: http://viktormorales.com
  * Text Domain: vhm-emojione
@@ -54,7 +54,6 @@ if(!class_exists('VHM_Emojione_Post_Reactions'))
 			$this->loading_text = __('Loading VHM EMOJIONE Post Reactions...', TEXTDOMAIN);
 			$this->sending_text = __('Sending reaction. Please wait...', TEXTDOMAIN);
 			
-			define('TEXTDOMAIN', 'vhm-emojione-post-reactions');
 			load_plugin_textdomain(TEXTDOMAIN, '', dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
 			register_activation_hook( __FILE__, array( &$this, 'activate' ) );
@@ -94,6 +93,7 @@ if(!class_exists('VHM_Emojione_Post_Reactions'))
 		 */
 		public function admin_init()
 		{
+			
 			if ($_REQUEST['reset'] == 'reactions')
 			{
 				delete_post_meta_by_key('_vhm_emojione_post_reactions');
@@ -108,8 +108,10 @@ if(!class_exists('VHM_Emojione_Post_Reactions'))
 			}
 			elseif ($_REQUEST['reset'] == 'all')
 			{
+				
 				delete_post_meta_by_key('_vhm_emojione_post_reactions');
 				delete_post_meta_by_key('_vhm_emojione_post_reactions_voters');
+				update_option('vhmEmojionePostReactionsOptions', false);
 				wp_redirect( $this->plugin_url );
 				exit;
 			}
@@ -281,15 +283,26 @@ if(!class_exists('VHM_Emojione_Post_Reactions'))
         /**
          * Activate the plugin
          */
-        public static function activate()
+        public function activate()
         {
-        
+			if (empty($this->options))
+			{
+				$this->options['title'] = '<h2>' . __('I\'ve found this post...', TEXTDOMAIN) . '</h2>';
+				$this->options['reactions'] = array(
+					array('label' => __('Love it!', TEXTDOMAIN), 'code' => ':heart_eyes:' ),
+					array('label' => __('Fine', TEXTDOMAIN), 'code' => ':slight_smile:' ),
+					array('label' => __('Mmmmh...', TEXTDOMAIN), 'code' => ':thinking:' ),
+					array('label' => __('Boring!', TEXTDOMAIN), 'code' => ':unamused:' ),
+					array('label' => __('No comments...', TEXTDOMAIN), 'code' => ':zipper_mouth:' )
+				);
+				update_option('vhmEmojionePostReactionsOptions', $this->options);
+			}
         } // END public static function activate
 
         /**
          * Deactivate the plugin
          */     
-        public static function deactivate()
+        public function deactivate()
         {
 
         } // END public static function deactivate
@@ -300,6 +313,7 @@ if(!class_exists('VHM_Emojione_Post_Reactions'))
 } // END if(!class_exists('VHM_Emojione_Post_Reactions'))
 
 // instantiate the plugin class
+define('TEXTDOMAIN', 'vhm-emojione-post-reactions');
 $VHM_Emojione_Post_Reactions = new VHM_Emojione_Post_Reactions();
 function vhm_emojione_post_reactions( $atts = false )
 {
