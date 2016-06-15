@@ -188,7 +188,10 @@ if(!class_exists('VHM_Emojione_Post_Reactions'))
 		
 		public function the_content($content)
 		{
-			$return = '<div id="vhm-emojione-post-reactions-box">' . $this->loading_text . '</div>';
+			if (is_single())
+			{
+				$return = '<div id="vhm-emojione-post-reactions-box">' . $this->loading_text . '</div>';
+			}
 			return $content . $return;
 		}
 		
